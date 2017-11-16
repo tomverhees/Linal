@@ -1,6 +1,6 @@
 #include "Vector.h"
 
-Vector::Vector(int length, int direction)
+Vector::Vector(float length, float direction)
 {
 	this->length = length; 
 	this->direction = direction; 
@@ -11,32 +11,32 @@ Vector::~Vector()
 	delete v; 
 }
 
-void Vector::setdirection(int value)
+void Vector::setdirection(float value)
 {
 	direction = value; 
 }
 
-void Vector::setLength(int value)
+void Vector::setLength(float value)
 {
 	length = value; 
 }
 
-int Vector::getlength()
+float Vector::getlength()
 {
 	return length; 
 }
 
-int Vector::getdirection()
+float Vector::getdirection()
 {
 	return direction;
 }
 
-void Vector::addVectors(int richting, int lengte)
+void Vector::addVectors(float richting, float lengte)
 {
 	v = new Vector(lengte, richting);
 }
 
-Vector* Vector::scaleVector(int value)
+Vector* Vector::scaleVector(float value)
 {
 	v->setdirection(direction * value); 
 	v->setLength(length * value);
@@ -57,4 +57,5 @@ Vector* Vector::subtractVectors(Vector &v)
 
 void Vector::show()
 {
+
 }
