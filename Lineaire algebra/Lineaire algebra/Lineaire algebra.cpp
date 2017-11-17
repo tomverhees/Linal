@@ -8,27 +8,23 @@
 
 int main()
 {
-	float** array = new float*[3]; 
-	for(int i = 0; i < 3; i++)
-	{
-		array[i] = new float[2];
-	}
+	std::vector<std::vector<Vector*>> array; 
+	 //
 	for(int i = 0; i< 3; i++)
 	{
-		for(int j =0; j < 2; j++)
-		{
-			array[i][j] = 2; 
-		}
+		array.push_back(std::vector<Vector*>(1, new Vector(3, 1)));
+		array[i].push_back(new Vector(2, 1));
 	}
-	
-	Matrix m = Matrix(3,2, array); 
-	auto a = m.scale(2,2, &m); 
-	for(int i =0; i < a->xlength(); i++)
+	for (int i = 0; i< 2; i++)
 	{
-		for(int j = 0; j < a->ylength(); j++)
+		for (int j = 0; j < 3; j++)
 		{
-			std::cout << a->arraypunten[i][j] << std::endl;
+			std::cout << array[j][i]->getlength() << " ";
 		}
+		std::cout << std::endl;
 	}
+	Matrix m = Matrix(3,2, array); 
+	auto a = m.scale(2,2, &m);
+	auto b = m.translate(1.8, 1.5, &m);
     return 0;
 }
