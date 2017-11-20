@@ -8,23 +8,20 @@
 
 int main()
 {
-	std::vector<std::vector<Vector*>> array; 
+	std::vector<float> array; 
 	 //
-	for(int i = 0; i< 3; i++)
+	for(int i = 0; i< 9; i++)
 	{
-		array.push_back(std::vector<Vector*>(1, new Vector(3, 1)));
-		array[i].push_back(new Vector(2, 1));
+		array.push_back(3);
 	}
-	for (int i = 0; i< 2; i++)
+	for (int j = 0; j < 9; j++)
 	{
-		for (int j = 0; j < 3; j++)
-		{
-			std::cout << array[j][i]->getlength() << " ";
-		}
-		std::cout << std::endl;
+		std::cout << array[j] << " ";
 	}
-	Matrix m = Matrix(3,2, array); 
-	auto a = m.scale(2,2, &m);
-	auto b = m.translate(1.8, 1.5, &m);
+	std::cout << std::endl;
+	
+	Matrix<float> m = Matrix<float>(3,2); 
+	auto a = m.scale(2,2, 2);
+	//auto b = m.translate(1.8, 1.5, &m);
     return 0;
 }
