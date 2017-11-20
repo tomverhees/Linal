@@ -20,8 +20,18 @@ int main()
 	}
 	std::cout << std::endl;
 	
-	Matrix<float> m = Matrix<float>(3,2); 
-	auto a = m.scale(2,2, 2);
-	//auto b = m.translate(1.8, 1.5, &m);
+	Matrix<float> m = Matrix<float>(3,3); 
+	for (int i = 0; i < m.xlength(); i++) {
+		m(i, 0) = 5;
+	}
+	for (int i = 0; i < m.ylength(); i++) {
+		m(i, 1) = 3;
+	}
+	for (int i = 0; i < m.ylength(); i++) {
+		m(i, 2) = 1;
+	}
+	Matrix<float> n = Matrix<float>(3, 3);
+	auto a = n.translate(1.8, 1.5);
+	auto b = a * m; 
     return 0;
 }
