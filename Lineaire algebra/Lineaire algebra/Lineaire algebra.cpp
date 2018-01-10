@@ -20,18 +20,23 @@ int main()
 	}
 	std::cout << std::endl;
 	
-	Matrix<float> m = Matrix<float>(3,3); 
-	for (int i = 0; i < m.xlength(); i++) {
+	Matrix<float> m = Matrix<float>(3,2); 
+	/*for (int i = 0; i < m.xlength(); i++) {
 		m(i, 0) = 5;
 	}
-	for (int i = 0; i < m.ylength(); i++) {
+	for (int i = 0; i < m.xlength(); i++) {
 		m(i, 1) = 3;
-	}
-	for (int i = 0; i < m.ylength(); i++) {
-		m(i, 2) = 1;
-	}
+	}*/
+
+	m(0, 0) = 2; 
+	m(0, 1) = 2;
+	m(1, 0) = 2;
+	m(1, 1) = 2; 
+	m(2, 0) = 2;
+	m(2, 1) = 2;
 	Matrix<float> n = Matrix<float>(3, 3);
-	auto a = n.translate(1.8, 1.5);
-	auto b = a * m; 
+	auto k = n.translate2d(0.1, 0.1); 
+
+	auto f = m * k;
     return 0;
 }
