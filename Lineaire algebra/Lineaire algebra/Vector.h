@@ -18,9 +18,7 @@ public:
 	float getDeltaY() const;
 	float getDeltaZ() const;
 	Vector crossProduct(Vector v, Vector v1);
-	~Vector();
-	Vector* combineVectors(Vector &v);
-	Vector* subtractVectors(Vector &v);
+	~Vector() = default;
 	float inProduct(Vector v, Vector v1);
 	float calculateAngle(Vector v, Vector v1);
 	Vector& operator+=(const Vector& vector);

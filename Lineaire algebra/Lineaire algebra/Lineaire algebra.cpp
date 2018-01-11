@@ -36,7 +36,7 @@ int main()
 	m(2, 1) = 2;
 	Matrix<float> n = Matrix<float>(3, 3);
 	auto k = n.translate2d(0.1, 0.1); 
-
+	auto l = m.rotate3dall(10, 5, 2, 3);
 	auto f = m * k;
     return 0;
 }

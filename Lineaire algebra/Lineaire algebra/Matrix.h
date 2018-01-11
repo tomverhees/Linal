@@ -22,18 +22,18 @@ public:
 	T& operator()(int x, int y) {
 		return array[(this->y* x) + y];
 	}
-	Matrix Matrix::operator*(Matrix& other)
+	Matrix Matrix::operator*(const Matrix& other)
 	{
 		bool which = true;
 		Matrix extra = Matrix(this->xlength(), this->xlength());
-		if (this->xlength() > other.xlength())
+		if (this->ylength() > other.ylength())
 		{
-			extra = Matrix(this->xlength(), this->xlength());
+			extra = Matrix(this->xlength(), this->ylength());
 			for (int i = 0; i < other.xlength(); i++)
 			{
 				for (int j = 0; j < other.ylength(); j++)
 				{
-					extra(i, j) = other(i, j);
+					extra(i, j) = other.array[(other.ylength()* i) + j];
 				}
 			}
 			which = true;
@@ -52,7 +52,7 @@ public:
 		}
 
 		float k = 0;
-		if (this->ylength() != other.xlength()) {
+		if (this->ylength() != other.ylength()) {
 			if ((extra.xlength() == 4) && (extra.ylength() == 4))
 			{
 				extra(0, 3) = 0;
@@ -96,7 +96,7 @@ public:
 				{
 					for (int n = 0; n < extra.ylength(); n++)
 					{
-						k += extra(l, n) * other(n, i);
+						k += extra(n, i) * other.array[(other.ylength() * l) + n];
 					}
 					product(l, i) = k;
 					k = 0;
@@ -107,7 +107,7 @@ public:
 	}
 	Matrix rotateMatrix(float degrees)
 	{
-		float radians = degrees * M_PI / 180;
+		float radians = degrees * (M_PI / 180);
 		Matrix scale = Matrix(2, 2);
 		scale(0, 0) = cos(radians);
 		scale(0, 1) = sin(radians);
@@ -117,7 +117,7 @@ public:
 	}
 	Matrix rotateMatrixwp(float degrees)
 	{
-		float radians = degrees * M_PI / 180;
+		float radians = degrees * (M_PI / 180);
 		Matrix scale = Matrix(3, 3);
 		scale(0, 0) = cos(radians);
 		scale(0, 1) = sin(radians);
@@ -139,7 +139,7 @@ public:
 		}
 		else
 		{
-			product = (translate2d(x, y) * (rotateMatrixwp(degrees) * translate2d(-x, -y)))* (*this);
+			product = (translate2d(x, y) * (rotateMatrixwp(degrees) * translate2d(-x, -y)) * (*this));
 		}
 		return product;
 	}
@@ -149,7 +149,7 @@ public:
 		Matrix product = Matrix(3, 3);
 		float t1 = atan2(z, x);
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
-		product = (*this) * (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * rotateY(t1)))));
+		product = (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * rotateY(t1)))) * (*this));
 		return product;
 	}
 	Matrix rotate3dall(float degrees, float x, float y, float z)
@@ -157,7 +157,7 @@ public:
 		Matrix product = Matrix(4, 4);
 		float t1 = atan2(z, x);
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
-		product = (*this) * (translate3d(x, y, z) * (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * (rotateY(t1) * translate3d(-x, -y, -z)))))));
+		product = (translate3d(x, y, z) * (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * (rotateY(t1) * translate3d(-x, -y, -z)))))) * (*this) );
 		return product;
 	}
 	Matrix rotateX(float degrees)
