@@ -6,6 +6,7 @@
 class IGameObject
 {
 public:
+	virtual ~IGameObject() = default;
 	IGameObject() : mIsActive(true) { mApplication = FWApplication::GetInstance(); }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,9 +20,9 @@ public:
 			return;
 
 		if (mWidth == 0 || mHeight == 0)
-			mApplication->DrawTexture(mTexture, mX, mY);
+			mApplication->DrawTexture(mTexture, mX, mApplication->GetWindowHeight() - mY);
 		else
-			mApplication->DrawTexture(mTexture, mX, mY, mWidth, mHeight);
+			mApplication->DrawTexture(mTexture, mX, mApplication->GetWindowHeight() - mY, mWidth, mHeight);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,7 +41,7 @@ public:
 	///
 	/// <param name="collidedObject">	[in,out] If non-null, the collided object. </param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	virtual void OnCollision(IGameObject * collidedObject){ }
+	virtual void OnCollision(IGameObject * collidedObject) { }
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,12 +203,12 @@ public:
 		return true;
 	}
 
-	virtual void SetActive(bool isActive) { mIsActive = isActive;  };
+	virtual void SetActive(bool isActive) { mIsActive = isActive; };
 
 protected:
 	FWApplication * mApplication;
 	SDL_Texture * mTexture;
-	
+
 	uint32_t mX, mY;
 	uint32_t mWidth, mHeight;
 	bool mIsActive;

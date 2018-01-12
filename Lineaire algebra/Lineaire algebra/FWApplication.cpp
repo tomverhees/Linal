@@ -16,7 +16,9 @@ FWApplication::FWApplication(int offsetX, int offsetY, int width, int height)
 	mTimeMS(0),
 	mIsRunning(true),
 	mFontSize(12),
-	mFontName("")
+	mFontName(""),
+	windowWidth_(width),
+	windowHeight_(height)
 	//mTextBackgroundColor(0xFF,0xFF,0xFF,0xFF)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -207,9 +209,9 @@ void FWApplication::RemoveTexture(SDL_Texture * texture)
 	SDL_DestroyTexture(texture);
 }
 
-void FWApplication::DrawLine(int startPosX, int startPosY, int endPosX, int endPosY)
+void FWApplication::DrawLine(int startPosX, int startPosY, int endPosX, int endPosY) const
 {
-	SDL_RenderDrawLine(mRenderer, startPosX, startPosY, endPosX, endPosY);
+	SDL_RenderDrawLine(mRenderer, windowWidth_ / 2 + startPosX, windowHeight_ / 2 - startPosY, windowWidth_ / 2 + endPosX, windowHeight_ / 2 - endPosY);
 }
 
 void FWApplication::SetColor(const Color & color)
@@ -318,7 +320,7 @@ void FWApplication::DrawRect(int startPosX, int startPosY, int width, int height
 //	if (SDL_MUSTLOCK(super))  { SDL_UnlockSurface(super); }
 //}
 
-void FWApplication::AddRenderable(IGameObject * renderable)
+void FWApplication::AddRenderable(IGameObject* renderable)
 {
 	mGameObjects.push_back(renderable);
 }
@@ -370,6 +372,16 @@ void FWApplication::SetFont(const std::string & filename)
 void FWApplication::Quit()
 {
 	mIsRunning = false;
+}
+
+int FWApplication::GetWindowWidth() const
+{
+	return windowWidth_;
+}
+
+int FWApplication::GetWindowHeight() const
+{
+	return windowHeight_;
 }
 
 

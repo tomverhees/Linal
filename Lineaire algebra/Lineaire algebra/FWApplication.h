@@ -59,7 +59,7 @@ public:
 	SDL_Window * GetWindow() const;
 	static FWApplication * GetInstance();
 
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// <summary>	Is the game running, returns false when window is closed. </summary>
 	///
@@ -119,7 +119,7 @@ public:
 	/// <param name="height"> 	The height. </param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	void DrawTexture(SDL_Texture * texture, int xOffset, int yOffset, int width, int height);
-	
+
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ public:
 	/// <param name="endPosX">  	The end position x coordinate. </param>
 	/// <param name="endPosY">  	The end position y coordinate. </param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DrawLine(int startPosX, int startPosY, int endPosX, int endPosY);
+	void DrawLine(int startPosX, int startPosY, int endPosX, int endPosY) const;
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -241,6 +241,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	void RenderGameObjects();
 	void Quit();
+	int GetWindowWidth() const;
+	int GetWindowHeight() const;
 	//void AddOnEvent(std::function<void(SDL_Event*)> func);
 
 private:
@@ -263,6 +265,7 @@ private:
 	std::string mFontName;
 	uint32_t mFontSize;
 	//uint32_t mColor;
-
+	int windowWidth_;
+	int windowHeight_;
 };
 

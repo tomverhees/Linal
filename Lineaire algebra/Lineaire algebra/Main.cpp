@@ -7,11 +7,20 @@
 #include <SDL.h>
 #undef main
 #include "Config.h"
+#include "Vector.h"
 
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	FWApplication application;
+
+	Vector v1 = Vector(2, 4, 0);
+	Vector v2 = Vector(2, -3, 0, 4, 5);
+	Vector v3 = v1 *= v2;
+	application.AddRenderable(&v1);
+	application.AddRenderable(&v2);
+	application.AddRenderable(&v3);
+
 	if (!application.GetWindow())
 	{
 		LOG("Couldn't create window...");

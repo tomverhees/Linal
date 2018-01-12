@@ -1,5 +1,7 @@
 #pragma once
-class Vector
+#include "IGameObject.h"
+
+class Vector : public IGameObject
 {
 private: 
 	float x_; 
@@ -17,13 +19,14 @@ public:
 	float getDeltaX() const;
 	float getDeltaY() const;
 	float getDeltaZ() const;
-	Vector crossProduct(Vector v, Vector v1);
+	Vector crossProduct(Vector v, Vector v1) const;
 	~Vector() = default;
-	float inProduct(Vector v, Vector v1);
-	float calculateAngle(Vector v, Vector v1);
-	Vector& operator+=(const Vector& vector);
-	Vector& operator-=(const Vector& vector);
-	Vector& operator*=(const Vector& vector);
-	Vector& operator*=(float scale);
-	void show();
+	float inProduct(Vector v, Vector v1) const;
+	float calculateAngle(Vector v, Vector v1) const;
+	Vector operator+=(const Vector& vector);
+	Vector operator-=(const Vector& vector) const;
+	Vector operator*=(const Vector& vector);
+	Vector operator*=(float scale);
+	void Update(float deltaTime) override;
+	void Draw() override;
 };
