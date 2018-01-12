@@ -5,7 +5,7 @@
 #include <cmath>
 #include <math.h>
 template<typename T>
-class Matrix
+class Matrix : public IGameObject
 {
 private:
 	std::vector<T> array;
@@ -40,7 +40,7 @@ public:
 		}
 		else
 		{
-			extra = Matrix(other.xlength(), other.xlength());
+			extra = Matrix(other.xlength(), other.ylength());
 			for (int i = 0; i < this->xlength(); i++)
 			{
 				for (int j = 0; j < this->ylength(); j++)
@@ -130,12 +130,12 @@ public:
 		scale(1, 2) = 0;
 		return scale;
 	}
-	Matrix rotate(float degrees, float x, float y)
+	Matrix rotate(float degrees, float x = 0, float y = 0)
 	{
 		Matrix product = Matrix(3, 3);
 		if (x == 0 && y == 0)
 		{
-			product = rotateMatrix(degrees) * (*this);
+			product = rotateMatrix(degrees) *(*this);
 		}
 		else
 		{
@@ -157,7 +157,7 @@ public:
 		Matrix product = Matrix(4, 4);
 		float t1 = atan2(z, x);
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
-		product = (translate3d(x, y, z) * (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * (rotateY(t1) * translate3d(-x, -y, -z)))))) * (*this) );
+		product = (translate3d(x, y, z) * (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * (rotateY(t1) * translate3d(-x, -y, -z)))))) * (*this));
 		return product;
 	}
 	Matrix rotateX(float degrees)
@@ -283,6 +283,28 @@ public:
 	std::vector<T> getMatrix()
 	{
 		return array;
+	}
+	void Update(float deltaTime) override
+	{
+
+	}
+	void Draw() override
+	{
+		for (int i = 0; i < x; i++)
+		{
+			if (i < x - 1)
+			{
+				mApplication->SetColor(Color(0, 0, 0, 0));
+				mApplication->DrawLine(this->operator()(i, 0) * 10, this->operator()(i, 1) * 10, this->operator()(i + 1, 0) * 10, this->operator()(i + 1, 1) * 10);
+				mApplication->SetColor(Color(255, 255, 255, 255));
+			}
+			else
+			{
+				mApplication->SetColor(Color(0, 0, 0, 0));
+				mApplication->DrawLine(this->operator()(i, 0) * 10, this->operator()(i, 1) * 10, this->operator()(0, 0) * 10, this->operator()(0, 1) * 10);
+				mApplication->SetColor(Color(255, 255, 255, 255));
+			}
+		}
 	}
 };
 

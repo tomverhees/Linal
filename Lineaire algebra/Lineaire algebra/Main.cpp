@@ -14,12 +14,26 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	FWApplication application;
 
-	Vector v1 = Vector(2, 4, 0);
+	/*Vector v1 = Vector(2, 4, 0);
 	Vector v2 = Vector(2, -3, 0, 4, 5);
 	Vector v3 = v1 *= v2;
 	application.AddRenderable(&v1);
 	application.AddRenderable(&v2);
-	application.AddRenderable(&v3);
+	application.AddRenderable(&v3);*/
+	Matrix<float> matrix1 = Matrix<float>(3, 2);
+	matrix1(0, 0) = 0;
+	matrix1(0, 1) = 0;
+	matrix1(1, 0) = 1;
+	matrix1(1, 1) = 1;
+	matrix1(2, 0) = 0;
+	matrix1(2, 1) = 2;
+	Matrix<float> matrix2 = matrix1.translate2d(5, 5) * matrix1;
+	Matrix<float> matrix3 = matrix1.scale2d(5, 5) * matrix1;
+	Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
+	application.AddRenderable(&matrix1);
+	application.AddRenderable(&matrix2);
+	application.AddRenderable(&matrix3);
+	application.AddRenderable(&matrix4);
 
 	if (!application.GetWindow())
 	{

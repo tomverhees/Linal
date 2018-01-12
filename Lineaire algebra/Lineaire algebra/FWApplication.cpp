@@ -209,7 +209,7 @@ void FWApplication::RemoveTexture(SDL_Texture * texture)
 	SDL_DestroyTexture(texture);
 }
 
-void FWApplication::DrawLine(int startPosX, int startPosY, int endPosX, int endPosY) const
+void FWApplication::DrawLine(const int startPosX, const int startPosY, const int endPosX, const int endPosY) const
 {
 	SDL_RenderDrawLine(mRenderer, windowWidth_ / 2 + startPosX, windowHeight_ / 2 - startPosY, windowWidth_ / 2 + endPosX, windowHeight_ / 2 - endPosY);
 }

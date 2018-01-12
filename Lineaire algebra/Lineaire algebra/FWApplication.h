@@ -132,7 +132,7 @@ public:
 	/// <param name="endPosX">  	The end position x coordinate. </param>
 	/// <param name="endPosY">  	The end position y coordinate. </param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DrawLine(int startPosX, int startPosY, int endPosX, int endPosY) const;
+	void DrawLine(const int startPosX, const int startPosY, const int endPosX, const int endPosY) const;
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
