@@ -50,43 +50,43 @@ float Vector::getDeltaZ() const
 	return deltaz_;
 }
 
-Vector Vector::crossProduct(Vector v, Vector v1) const
+Vector Vector::crossProduct(const Vector& vector) const
 {
-	float deltax = v.getDeltaY() * v1.getDeltaZ() - v.getDeltaZ() * v1.getDeltaY();
-	float deltay = v.getDeltaZ() * v1.getDeltaX() - v.getDeltaX() * v1.getDeltaZ();
-	float deltaz = v.getDeltaX() * v1.getDeltaY() - v.getDeltaY() * v1.getDeltaX();
+	float deltax = deltay_ * vector.getDeltaZ() - deltaz_ * vector.getDeltaY();
+	float deltay = deltaz_ * vector.getDeltaX() - deltax_ * vector.getDeltaZ();
+	float deltaz = deltax_ * vector.getDeltaY() - deltay_ * vector.getDeltaX();
 
 	return Vector(deltax, deltay, deltaz);
 }
 
-float Vector::inProduct(Vector v, Vector v1) const
+float Vector::inProduct(const Vector& vector) const
 {
-	return v.getDeltaX() * v1.getDeltaX() + v.getDeltaY() * v1.getDeltaY() + v.getDeltaZ() * v1.getDeltaZ();
+	return deltax_ * vector.getDeltaX() + deltay_ * vector.getDeltaY() + deltaz_ * vector.getDeltaZ();
 }
 
-float Vector::calculateAngle(Vector v, Vector v1) const
+float Vector::calculateAngle(const Vector& vector) const
 {
-	float cos = inProduct(v, v1) / (v.getLength() * v1.getLength());
+	float cos = inProduct(vector) / (getLength() * vector.getLength());
 	cos = acos(cos);
 	return cos * 180.0 / M_PI;
 }
 
-Vector Vector::operator+=(const Vector& vector)
+Vector Vector::operator+(const Vector& vector)
 {
 	return Vector(deltax_ + vector.getDeltaX(), deltay_ + vector.getDeltaY(), deltaz_ + vector.getDeltaZ(), x_, y_, z_);
 }
 
-Vector Vector::operator-=(const Vector& vector) const
+Vector Vector::operator-(const Vector& vector) const
 {
 	return Vector(deltax_ - vector.getDeltaX(), deltay_ - vector.getDeltaY(), deltaz_ - vector.getDeltaZ(), x_, y_, z_);
 }
 
-Vector Vector::operator*=(const Vector& vector)
+Vector Vector::operator*(const Vector& vector) const
 {
 	return Vector(deltax_ * vector.getDeltaX(), deltay_ * vector.getDeltaY(), deltaz_ * vector.getDeltaZ(), x_, y_, z_);
 }
 
-Vector Vector::operator*=(float scale)
+Vector Vector::operator*(float scale) const
 {
 	return Vector(deltax_ * scale, deltay_ * scale, deltaz_ * scale, x_, y_, z_);
 }

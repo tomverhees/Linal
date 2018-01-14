@@ -20,7 +20,8 @@ int main()
 	application.AddRenderable(&v1);
 	application.AddRenderable(&v2);
 	application.AddRenderable(&v3);*/
-	Matrix<float> matrix1 = Matrix<float>(3, 2);
+
+	/*Matrix<float> matrix1 = Matrix<float>(3, 2);
 	matrix1(0, 0) = 0;
 	matrix1(0, 1) = 0;
 	matrix1(1, 0) = 1;
@@ -33,8 +34,47 @@ int main()
 	application.AddRenderable(&matrix1);
 	application.AddRenderable(&matrix2);
 	application.AddRenderable(&matrix3);
-	application.AddRenderable(&matrix4);
+	application.AddRenderable(&matrix4);*/
 
+	Matrix<float> matrixCube = Matrix<float>(8, 4);
+	matrixCube(0, 0) = 2;
+	matrixCube(0, 1) = 4;
+	matrixCube(0, 2) = 5;
+	matrixCube(1, 0) = 5;
+	matrixCube(1, 1) = 4;
+	matrixCube(1, 2) = 5;
+	matrixCube(2, 0) = 5;
+	matrixCube(2, 1) = 8;
+	matrixCube(2, 2) = 5;
+	matrixCube(3, 0) = 2;
+	matrixCube(3, 1) = 8;
+	matrixCube(3, 2) = 5;
+
+	matrixCube(4, 0) = 2;
+	matrixCube(4, 1) = 4;
+	matrixCube(4, 2) = 10;
+	matrixCube(5, 0) = 5;
+	matrixCube(5, 1) = 4;
+	matrixCube(5, 2) = 10;
+	matrixCube(6, 0) = 5;
+	matrixCube(6, 1) = 8;
+	matrixCube(6, 2) = 10;
+	matrixCube(7, 0) = 2;
+	matrixCube(7, 1) = 8;
+	matrixCube(7, 2) = 10;
+
+	// Camera positie
+	Vector eye = Vector(400, 300, 0);
+	Vector lookAt = Vector(2, 4, 5);
+	Vector up = Vector(0, 1, 0);
+	Matrix<float> cameraMatrix = Matrix<float>(4, 4);
+	cameraMatrix = cameraMatrix.generateCameraMatrix(eye, lookAt, up);
+	Matrix<float> perspectionMatrix = Matrix<float>(4, 4);
+	perspectionMatrix = perspectionMatrix.generatePerspectionMatrix(5, 10, 90);
+	Matrix<float> displayVector = perspectionMatrix * cameraMatrix * matrixCube;
+	displayVector.afterCalculation(400);
+
+	application.AddRenderable(&displayVector);
 	if (!application.GetWindow())
 	{
 		LOG("Couldn't create window...");

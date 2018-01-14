@@ -306,5 +306,89 @@ public:
 			}
 		}
 	}
+
+	Matrix generateCameraMatrix(Vector eye, Vector lookAt, Vector up)
+	{
+		Vector z = eye - lookAt;
+		z.normalize();
+
+		Vector y = up;
+		y.normalize();
+
+		Vector x = y.crossProduct(z);
+		x.normalize();
+
+		y = z.crossProduct(y);
+		y.normalize();
+
+		float inProductX = x.inProduct(eye) * -1;
+		float inProductY = y.inProduct(eye) * -1;
+		float inProductZ = z.inProduct(eye) * -1;
+
+		Matrix cameraMatrix = Matrix(4, 4);
+		cameraMatrix(0, 0) = x.getDeltaX();
+		cameraMatrix(0, 1) = y.getDeltaX();
+		cameraMatrix(0, 2) = z.getDeltaX();
+		cameraMatrix(0, 3) = 0;
+		cameraMatrix(1, 0) = x.getDeltaY();
+		cameraMatrix(1, 1) = y.getDeltaY();
+		cameraMatrix(1, 2) = z.getDeltaY();
+		cameraMatrix(1, 3) = 0;
+		cameraMatrix(2, 0) = x.getDeltaZ();
+		cameraMatrix(2, 1) = y.getDeltaZ();
+		cameraMatrix(2, 2) = z.getDeltaZ();
+		cameraMatrix(2, 3) = 0;
+		cameraMatrix(3, 0) = inProductX;
+		cameraMatrix(3, 1) = inProductY;
+		cameraMatrix(3, 2) = inProductZ;
+		cameraMatrix(3, 3) = 1;
+
+		return cameraMatrix;
+	}
+
+	Matrix generatePerspectionMatrix(float near, float far, float fieldOfView)
+	{
+		const float scale = near * tan((fieldOfView / 180.0 * M_PI) * .5);
+
+		const float matrix2_2 = (far * -1) / (far - near);
+		const float matrix2_3 = (far * -1 * near) / (far - near);
+
+		Matrix perspectionMatrix = Matrix(4, 4);
+		perspectionMatrix(0, 0) = scale;
+		perspectionMatrix(0, 1) = 0;
+		perspectionMatrix(0, 2) = 0;
+		perspectionMatrix(0, 3) = 0;
+		perspectionMatrix(1, 0) = 0;
+		perspectionMatrix(1, 1) = scale;
+		perspectionMatrix(1, 2) = 0;
+		perspectionMatrix(1, 3) = 0;
+		perspectionMatrix(2, 0) = 0;
+		perspectionMatrix(2, 1) = 0;
+		perspectionMatrix(2, 2) = matrix2_2;
+		perspectionMatrix(2, 3) = matrix2_3;
+		perspectionMatrix(3, 0) = 0;
+		perspectionMatrix(3, 1) = 0;
+		perspectionMatrix(3, 2) = -1;
+		perspectionMatrix(3, 3) = 0;
+
+		return perspectionMatrix;
+	}
+
+	void afterCalculation(float screenSize)
+	{
+		for (int i = 0; i < x; i++)
+		{
+			this->operator()(0, i) = (screenSize / 2) + ((this->operator()(0, i) + 1) / this->operator()(3, i)) * screenSize * 0.5;
+			this->operator()(1, i) = (screenSize / 2) + ((this->operator()(1, i) + 1) / this->operator()(3, i)) * screenSize * 0.5;
+			this->operator()(2, i) *= -1;
+		}
+	}
+
+	Matrix generate3dMatrix(float screenSize)
+	{
+		Matrix matrix3d = generatePerspectionMatrix(0, 0, 0) * generateCameraMatrix(Vector(0, 0, 0), Vector(0, 0, 0), Vector(0, 0, 0)) * (*this);
+		matrix3d.afterCalculation(screenSize);
+		return matrix3d;
+	}
 };
 
