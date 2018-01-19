@@ -64,6 +64,11 @@ int main()
 	matrixCube(7, 2) = 10;
 
 	// Camera positie
+	// near minimale afstand die je ziet
+	// far tot waar je kan kijken
+	// testen met 100,100,100 cubus 
+	// lookat oorsprong
+	// scherm vierkant (bijv 600,600)
 	Vector eye = Vector(400, 300, 0);
 	Vector lookAt = Vector(2, 4, 5);
 	Vector up = Vector(0, 1, 0);
