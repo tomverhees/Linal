@@ -21,22 +21,32 @@ int main()
 	application.AddRenderable(&v2);
 	application.AddRenderable(&v3);*/
 
-	/*Matrix<float> matrix1 = Matrix<float>(3, 2);
+	Matrix<float> matrix1 = Matrix<float>(3, 3);
 	matrix1(0, 0) = 0;
 	matrix1(0, 1) = 0;
 	matrix1(1, 0) = 1;
 	matrix1(1, 1) = 1;
 	matrix1(2, 0) = 0;
 	matrix1(2, 1) = 2;
-	Matrix<float> matrix2 = matrix1.translate2d(5, 5) * matrix1;
-	Matrix<float> matrix3 = matrix1.scale2d(5, 5) * matrix1;
-	Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
-	application.AddRenderable(&matrix1);
-	application.AddRenderable(&matrix2);
-	application.AddRenderable(&matrix3);
-	application.AddRenderable(&matrix4);*/
+	matrix1(2, 2) = 1; 
 
-	Matrix<float> matrixCube = Matrix<float>(8, 4);
+	Matrix<float> matrix5 = Matrix<float>(3, 2);
+	matrix5(0, 0) = 0;
+	matrix5(0, 1) = 0;
+	matrix5(1, 0) = 1;
+	matrix5(1, 1) = 1;
+	matrix5(2, 0) = 0;
+	matrix5(2, 1) = 2;
+	Matrix<float> matrix2 = matrix1.translate2d(5, 5) * matrix1;
+
+	Matrix<float> matrix3 = matrix5.scale2d(5, 5) * matrix5;
+	Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
+	application.AddRenderable(&matrix5);
+	//application.AddRenderable(&matrix2);
+	application.AddRenderable(&matrix3);
+	application.AddRenderable(&matrix4);
+
+	/*Matrix<float> matrixCube = Matrix<float>(8, 4);
 	matrixCube(0, 0) = 2;
 	matrixCube(0, 1) = 4;
 	matrixCube(0, 2) = 5;
@@ -61,7 +71,7 @@ int main()
 	matrixCube(6, 2) = 10;
 	matrixCube(7, 0) = 2;
 	matrixCube(7, 1) = 8;
-	matrixCube(7, 2) = 10;
+	matrixCube(7, 2) = 10;*/
 
 	// Camera positie
 	// near minimale afstand die je ziet
@@ -69,17 +79,17 @@ int main()
 	// testen met 100,100,100 cubus 
 	// lookat oorsprong
 	// scherm vierkant (bijv 600,600)
-	Vector eye = Vector(400, 300, 0);
-	Vector lookAt = Vector(2, 4, 5);
-	Vector up = Vector(0, 1, 0);
-	Matrix<float> cameraMatrix = Matrix<float>(4, 4);
-	cameraMatrix = cameraMatrix.generateCameraMatrix(eye, lookAt, up);
-	Matrix<float> perspectionMatrix = Matrix<float>(4, 4);
-	perspectionMatrix = perspectionMatrix.generatePerspectionMatrix(5, 10, 90);
-	Matrix<float> displayVector = perspectionMatrix * cameraMatrix * matrixCube;
-	displayVector.afterCalculation(400);
-
-	application.AddRenderable(&displayVector);
+	//Vector eye = Vector(400, 300, 0);
+	//Vector lookAt = Vector(2, 4, 5);
+	//Vector up = Vector(0, 1, 0);
+	//Matrix<float> cameraMatrix = Matrix<float>(4, 4);
+	//cameraMatrix = cameraMatrix.generateCameraMatrix(eye, lookAt, up);
+	//Matrix<float> perspectionMatrix = Matrix<float>(4, 4);
+	//perspectionMatrix = perspectionMatrix.generatePerspectionMatrix(5, 10, 90);
+	//Matrix<float> displayVector = perspectionMatrix * cameraMatrix * matrixCube;
+	//displayVector.afterCalculation(400);
+/*
+	application.AddRenderable(&displayVector);*/
 	if (!application.GetWindow())
 	{
 		LOG("Couldn't create window...");

@@ -24,86 +24,22 @@ public:
 	}
 	Matrix Matrix::operator*(const Matrix& other)
 	{
-		bool which = true;
-		Matrix extra = Matrix(this->xlength(), this->xlength());
-		if (this->ylength() > other.ylength())
+		if (other.ylength() == 4 && this->xlength() == 4)
 		{
-			extra = Matrix(this->xlength(), this->ylength());
-			for (int i = 0; i < other.xlength(); i++)
-			{
-				for (int j = 0; j < other.ylength(); j++)
-				{
-					extra(i, j) = other.array[(other.ylength()* i) + j];
-				}
-			}
-			which = true;
+			return this->multiplyMatrices4X4(other);
+		}
+		else if (other.ylength() == 3 && this->xlength() == 3)
+		{
+			return this->multiplyMatrices3X3(other);
+		}
+		else if (other.ylength() == 2 && this->xlength() == 2)
+		{
+			return this->multiplyMatrices2X2(other);
 		}
 		else
 		{
-			extra = Matrix(other.xlength(), other.ylength());
-			for (int i = 0; i < this->xlength(); i++)
-			{
-				for (int j = 0; j < this->ylength(); j++)
-				{
-					extra(i, j) = array[(this->y* i) + j];
-				}
-			}
-			which = false;
+			throw std::exception("The matrix was not compatible");
 		}
-
-		float k = 0;
-		if (this->ylength() != other.ylength()) {
-			if ((extra.xlength() == 4) && (extra.ylength() == 4))
-			{
-				extra(0, 3) = 0;
-				extra(1, 3) = 0;
-				extra(2, 3) = 0;
-				extra(3, 3) = 1;
-				extra(3, 2) = 0;
-				extra(3, 1) = 0;
-				extra(3, 0) = 0;
-			}
-			else {
-				extra(0, 2) = 1;
-				extra(1, 2) = 1;
-				extra(2, 2) = 1;
-			}
-		}
-		else
-		{
-
-		}
-
-		Matrix product = Matrix(extra.xlength(), extra.ylength());
-		if (which == true) {
-			for (int i = 0; i < this->ylength(); i++)
-			{
-				for (int l = 0; l < extra.xlength(); l++)
-				{
-					for (int n = 0; n < extra.ylength(); n++)
-					{
-						k += extra(l, n) * array[(this->y * n) + i];
-					}
-					product(l, i) = k;
-					k = 0;
-				}
-			}
-		}
-		else {
-			for (int i = 0; i < other.ylength(); i++)
-			{
-				for (int l = 0; l < extra.xlength(); l++)
-				{
-					for (int n = 0; n < extra.ylength(); n++)
-					{
-						k += extra(n, i) * other.array[(other.ylength() * l) + n];
-					}
-					product(l, i) = k;
-					k = 0;
-				}
-			}
-		}
-		return product;
 	}
 	Matrix rotateMatrix(float degrees)
 	{
@@ -135,95 +71,200 @@ public:
 		Matrix product = Matrix(3, 3);
 		if (x == 0 && y == 0)
 		{
-			product = rotateMatrix(degrees) *(*this);
+			product = (*this) * rotateMatrix(degrees);
 		}
 		else
 		{
-			product = (translate2d(x, y) * (rotateMatrixwp(degrees) * translate2d(-x, -y)) * (*this));
+			Matrix extra = Matrix(3, 3);
+			for (int l = 0; l < this->xlength(); l++)
+			{
+				for (int n = 0; n < this->ylength(); n++)
+				{
+					extra(l, n) = array[this->ylength() * l + n];
+				}
+			}
+			for (int m = 0; m < this->xlength(); m++) {
+				extra(m, 2) = 1;
+			}
+			product = translate2d(x, y) * (rotateMatrixwp(degrees) * (translate2d(-x, -y) * extra));
 		}
 		return product;
 	}
 
 	Matrix rotate3dO(float degrees, float x, float y, float z)
 	{
-		Matrix product = Matrix(3, 3);
+		Matrix product = Matrix(4, 4);
+		Matrix temp = Matrix(4, 4);
 		float t1 = atan2(z, x);
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
-		product = (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * rotateY(t1)))) * (*this));
+		temp = (*this) * InverseRotateY(t1);
+		temp = temp * InverseRotateZ(t2);
+		temp = temp * rotateX(degrees);
+		temp = temp * rotateZ(t2);
+		product = temp * rotateY(t1);
+		return product;
+	}
+	Matrix multiplyMatrices2X2(const Matrix& multiplierMatrix)
+	{
+		Matrix matrix = (*this);
+		Matrix multiplyingMatrixPoints = multiplierMatrix;
+		if (multiplyingMatrixPoints.ylength() != 2 || matrix.xlength() != 2)
+		{
+			throw std::exception("MatrixHelper::multiplyMatrices2X2 >> multiplierMatrix must have exactly 2 points (columns).");
+		}
+		int k = 0;
+		Matrix product = Matrix(multiplierMatrix.xlength(), matrix.ylength());
+		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
+		{
+			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
+			{
+				for (int n = 0; n < matrix.ylength(); n++)
+				{
+					k += multiplyingMatrixPoints(l, n) * matrix.array[(ylength() * n) + i];
+				}
+				product(l, i) = k;
+				k = 0;
+			}
+		}
+		return product;
+	}
+	Matrix multiplyMatrices3X3(const Matrix& multiplierMatrix)
+	{
+		Matrix matrix = (*this);
+		Matrix multiplyingMatrixPoints = multiplierMatrix;
+		if (multiplyingMatrixPoints.ylength() != 3 || matrix.xlength() != 3)
+		{
+			throw std::exception("MatrixHelper::multiplyMatrices3X3 >> multiplierMatrix must have exactly 3 points (columns).");
+		}
+		int k = 0;
+		Matrix product = Matrix(3, 3);
+		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
+		{
+			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
+			{
+				for (int n = 0; n < matrix.ylength(); n++)
+				{
+					k += multiplyingMatrixPoints(l, n) * matrix.array[(ylength() * n) + i];
+				}
+				product(l, i) = k;
+				k = 0;
+			}
+		}
+		return product;
+	}
+	Matrix multiplyMatrices4X4(const Matrix& multiplierMatrix)
+	{
+		Matrix matrix = (*this);
+		Matrix multiplyingMatrixPoints = multiplierMatrix;
+		if (multiplyingMatrixPoints.ylength() != 4 || matrix.xlength() != 4)
+		{
+			throw std::exception("MatrixHelper::multiplyMatrices4X4 >> multiplierMatrix must have exactly 4 points (columns).");
+		}
+		int k = 0;
+		Matrix product = Matrix(4, 4);
+		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
+		{
+			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
+			{
+				for (int n = 0; n < matrix.ylength(); n++)
+				{
+					k += multiplyingMatrixPoints(l, n) * matrix.array[(ylength() * n) + i];
+				}
+				product(l, i) = k;
+				k = 0;
+			}
+		}
 		return product;
 	}
 	Matrix rotate3dall(float degrees, float x, float y, float z)
 	{
 		Matrix product = Matrix(4, 4);
+		Matrix temp = Matrix(4, 4);
 		float t1 = atan2(z, x);
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
-		product = (translate3d(x, y, z) * (InverseRotateY(t1) * (InverseRotateZ(t2) * (rotateX(degrees) *(rotateZ(t2) * (rotateY(t1) * translate3d(-x, -y, -z)))))) * (*this));
+		temp = (*this) * translate3d(-x, -y, -z);
+		temp = temp * rotate3dO(degrees, x, y, z);
+		product = temp * translate3d(-x, -y, -z);
 		return product;
 	}
 	Matrix rotateX(float degrees)
 	{
 		float radians = degrees * M_PI / 180;
-		Matrix scale = Matrix(3, 3);
+		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = 1;
 		scale(0, 1) = 0;
 		scale(0, 2) = 0;
+		scale(0, 3) = 0;
 		scale(1, 0) = 0;
-		scale(2, 0) = 0;
 		scale(1, 1) = cos(radians);
 		scale(1, 2) = sin(radians);
+		scale(1, 3) = 0;
+		scale(2, 0) = 0;
 		scale(2, 1) = -sin(radians);
 		scale(2, 2) = cos(radians);
+		scale(2, 3) = 0;
+		scale(3, 3) = 1;
 		return scale;
 	}
 	Matrix rotateY(float radians)
 	{
 		//float radians = degrees * M_PI / 180;
-		Matrix scale = Matrix(3, 3);
+		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = cos(radians);
 		scale(0, 1) = 0;
 		scale(0, 2) = sin(radians);
+		scale(0, 3) = 0;
 		scale(1, 0) = 0;
-		scale(2, 0) = -sin(radians);
 		scale(1, 1) = 1;
 		scale(1, 2) = 0;
+		scale(1, 3) = 0;
+		scale(2, 0) = -sin(radians);
 		scale(2, 1) = 0;
 		scale(2, 2) = cos(radians);
+		scale(2, 3) = 0;
+		scale(3, 3) = 1;
 		return scale;
 	}
 	Matrix InverseRotateY(float radians)
 	{
 		//float radians = degrees * M_PI / 180;
-		Matrix scale = Matrix(3, 3);
+		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = cos(radians);
 		scale(0, 1) = 0;
 		scale(0, 2) = -sin(radians);
+		scale(0, 3) = 0;
 		scale(1, 0) = 0;
-		scale(2, 0) = sin(radians);
 		scale(1, 1) = 1;
 		scale(1, 2) = 0;
+		scale(1, 3) = 0;
+		scale(2, 0) = sin(radians);
 		scale(2, 1) = 0;
 		scale(2, 2) = cos(radians);
+		scale(2, 3) = 0;
+		scale(3, 3) = 1;
 		return scale;
 	}
 	Matrix rotateZ(float radians)
 	{
 		//float radians = degrees * M_PI / 180;
-		Matrix scale = Matrix(3, 3);
+		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = cos(radians);
 		scale(0, 1) = sin(radians);
 		scale(0, 2) = 0;
 		scale(1, 0) = -sin(radians);
-		scale(2, 0) = 0;
+
 		scale(1, 1) = cos(radians);
 		scale(1, 2) = 0;
+		scale(2, 0) = 0;
 		scale(2, 1) = 0;
 		scale(2, 2) = 1;
+		scale(3, 3) = 1;
 		return scale;
 	}
 	Matrix InverseRotateZ(float radians)
 	{
 		//float radians = degrees * M_PI / 180;
-		Matrix scale = Matrix(3, 3);
+		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = cos(radians);
 		scale(0, 1) = -sin(radians);
 		scale(0, 2) = 0;
@@ -233,6 +274,7 @@ public:
 		scale(1, 2) = 0;
 		scale(2, 1) = 0;
 		scale(2, 2) = 1;
+		scale(3, 3) = 1;
 		return scale;
 	}
 	Matrix scale2d(float scalex, float scaley)
@@ -386,7 +428,7 @@ public:
 
 	Matrix generate3dMatrix(float screenSize)
 	{
-		Matrix matrix3d = generatePerspectionMatrix(0, 0, 0) * generateCameraMatrix(Vector(0, 0, 0), Vector(0, 0, 0), Vector(0, 0, 0)) * (*this);
+		Matrix matrix3d = (*this) * (generatePerspectionMatrix(0, 0, 0) * generateCameraMatrix(Vector(0, 0, 0), Vector(0, 0, 0), Vector(0, 0, 0)));
 		matrix3d.afterCalculation(screenSize);
 		return matrix3d;
 	}
