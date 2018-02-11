@@ -137,7 +137,7 @@ public:
 			throw std::exception("MatrixHelper::multiplyMatrices3X3 >> multiplierMatrix must have exactly 3 points (columns).");
 		}
 		int k = 0;
-		Matrix product = Matrix(3, 3);
+		Matrix product = Matrix(multiplierMatrix.xlength(), matrix.ylength());
 		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
 		{
 			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
@@ -161,7 +161,7 @@ public:
 			throw std::exception("MatrixHelper::multiplyMatrices4X4 >> multiplierMatrix must have exactly 4 points (columns).");
 		}
 		int k = 0;
-		Matrix product = Matrix(4, 4);
+		Matrix product = Matrix(multiplierMatrix.xlength(), matrix.ylength());
 		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
 		{
 			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
@@ -286,10 +286,11 @@ public:
 	}
 	Matrix scale3d(float scalex, float scaley, float scalez)
 	{
-		Matrix scale = Matrix(3, 3);
+		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = scalex;
 		scale(1, 1) = scaley;
 		scale(2, 2) = scalez;
+		scale(3, 3) = 1;
 		return scale;
 	}
 	Matrix translate2d(float transx, float transy)
