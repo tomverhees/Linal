@@ -7,12 +7,13 @@ private:
 	float x_;
 	float y_;
 	float z_;
+	float extra_; 
 	float deltax_;
 	float deltay_;
 	float deltaz_;
 	Vector* v;
 public:
-	Vector(float deltax, float deltay, float deltaz, float x = 0, float y = 0, float z = 0);
+	Vector(float deltax, float deltay, float deltaz, float extra= 0,float x = 0, float y = 0, float z = 0);
 	void scaleVector(float valuex, float valuey, float valuez);
 	float getLength() const;
 	void normalize();

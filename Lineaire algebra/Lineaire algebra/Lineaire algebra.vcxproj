@@ -152,6 +152,8 @@
   <ItemGroup>
     <ClCompile Include="FWApplication.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Piramide.cpp" />
+    <ClCompile Include="prisma.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +161,8 @@
     <ClInclude Include="FWApplication.h" />
     <ClInclude Include="IGameObject.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Piramide.h" />
+    <ClInclude Include="prisma.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

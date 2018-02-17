@@ -8,6 +8,8 @@
 #undef main
 #include "Config.h"
 #include "Vector.h"
+#include "prisma.h"
+#include "Piramide.h"
 
 int main()
 {
@@ -21,57 +23,97 @@ int main()
 	application.AddRenderable(&v2);
 	application.AddRenderable(&v3);*/
 
-	Matrix<float> matrix1 = Matrix<float>(3, 3);
-	matrix1(0, 0) = 0;
-	matrix1(0, 1) = 0;
-	matrix1(1, 0) = 1;
-	matrix1(1, 1) = 1;
-	matrix1(2, 0) = 0;
-	matrix1(2, 1) = 2;
-	matrix1(2, 2) = 1; 
+	Matrix<float> testright = Matrix<float>(4, 3);
+	testright(0, 0) = 15;
+	testright(0, 1) = 0;
+	testright(0, 2) = 5;
+	testright(1, 0) = -15;
+	testright(1, 1) = -10;
+	testright(1, 2) = 5;
+	testright(2, 0) = -15;
+	testright(2, 1) = -10;
+	testright(2, 2) = -5;
+	testright(3, 0) = 15;
+	testright(3, 1) = 0;
+	testright(3, 2) = -5;
 
-	Matrix<float> matrix5 = Matrix<float>(3, 2);
-	matrix5(0, 0) = 0;
-	matrix5(0, 1) = 0;
-	matrix5(1, 0) = 1;
-	matrix5(1, 1) = 1;
-	matrix5(2, 0) = 0;
-	matrix5(2, 1) = 2;
-	Matrix<float> matrix2 = matrix1.translate2d(5, 5) * matrix1;
 
-	Matrix<float> matrix3 = matrix5.scale2d(5, 5) * matrix5;
-	Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
-	application.AddRenderable(&matrix5);
+	Matrix<float> testtop = Matrix<float>(3, 3);
+	testtop(0, 0) = 15;
+	testtop(0, 1) = 0;
+	testtop(0, 2) = 5;
+	testtop(1, 0) = -15;
+	testtop(1, 1) = 10;
+	testtop(1, 2) = 5;
+	testtop(2, 0) = -15;
+	testtop(2, 1) = -10;
+	testtop(2, 2) = 5;
+
+	Matrix<float> testbot = Matrix<float>(3, 3);
+	testbot(0, 0) = 15;
+	testbot(0, 1) = 0;
+	testbot(0, 2) = -5;
+	testbot(1, 0) = -15;
+	testbot(1, 1) = 10;
+	testbot(1, 2) = -5;
+	testbot(2, 0) = -15;
+	testbot(2, 1) = -10;
+	testbot(2, 2) = 5;
+
+	Matrix<float> testleft = Matrix<float>(4, 3);
+	testleft(0, 0) = 15;
+	testleft(0, 1) = 0;
+	testleft(0, 2) = 5;
+	testleft(1, 0) = -15;
+	testleft(1, 1) = 10;
+	testleft(1, 2) = 5;
+	testleft(2, 0) = -15;
+	testleft(2, 1) = 10;
+	testleft(2, 2) = -5;
+	testleft(3, 0) = 15;
+	testleft(3, 1) = 0;
+	testleft(3, 2) = -5;
+
+	Matrix<float> testback = Matrix<float>(4, 3);
+	testback(0, 0) = -15;
+	testback(0, 1) = 10;
+	testback(0, 2) = 5;
+	testback(1, 0) = -15;
+	testback(1, 1) = -10;
+	testback(1, 2) = 5;
+	testback(2, 0) = -15;
+	testback(2, 1) = -10;
+	testback(2, 2) = -5;
+	testback(3, 0) = -15;
+	testback(3, 1) = 10;
+	testback(3, 2) = -5;
+
+
+	//Matrix<float> matrix3 = matrix5.scale2d(5, 5) * matrix5;
+	//Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
+	prisma prisma;
+	application.AddRenderable(&prisma);
+	prisma.rotate(50);
+	for (int i = 0; i < prisma.getSides().size(); i++)
+	{
+		application.AddRenderable(&prisma.getSides()[i]);
+
+	}
+
+	Piramide piramide;
+	
+	for (int i = 0; i < piramide.getSides().size(); i++)
+	{
+		application.AddRenderable(&piramide.getSides()[i]);
+	}
+	application.AddRenderable(&piramide);
+
+	
+
 	//application.AddRenderable(&matrix2);
-	application.AddRenderable(&matrix3);
-	application.AddRenderable(&matrix4);
+	//application.AddRenderable(&matrix3);
+	//application.AddRenderable(&matrix4);
 
-	Matrix<float> matrixCube = Matrix<float>(8, 4);
-	matrixCube(0, 0) = 2;
-	matrixCube(0, 1) = 4;
-	matrixCube(0, 2) = 5;
-	matrixCube(1, 0) = 5;
-	matrixCube(1, 1) = 4;
-	matrixCube(1, 2) = 5;
-	matrixCube(2, 0) = 5;
-	matrixCube(2, 1) = 8;
-	matrixCube(2, 2) = 5;
-	matrixCube(3, 0) = 2;
-	matrixCube(3, 1) = 8;
-	matrixCube(3, 2) = 5;
-
-	matrixCube(4, 0) = 2;
-	matrixCube(4, 1) = 4;
-	matrixCube(4, 2) = 10;
-	matrixCube(5, 0) = 5;
-	matrixCube(5, 1) = 4;
-	matrixCube(5, 2) = 10;
-	matrixCube(6, 0) = 5;
-	matrixCube(6, 1) = 8;
-	matrixCube(6, 2) = 10;
-	matrixCube(7, 0) = 2;
-	matrixCube(7, 1) = 8;
-	matrixCube(7, 2) = 10;
 
 	// Camera positie
 	// near minimale afstand die je ziet
@@ -79,17 +121,9 @@ int main()
 	// testen met 100,100,100 cubus 
 	// lookat oorsprong
 	// scherm vierkant (bijv 600,600)
-	Vector eye = Vector(400, 300, 0);
-	Vector lookAt = Vector(2, 4, 5);
-	Vector up = Vector(0, 1, 0);
-	Matrix<float> cameraMatrix = Matrix<float>(4, 4);
-	cameraMatrix = cameraMatrix.generateCameraMatrix(eye, lookAt, up);
-	Matrix<float> perspectionMatrix = Matrix<float>(4, 4);
-	perspectionMatrix = perspectionMatrix.generatePerspectionMatrix(5, 10, 90);
-	Matrix<float> displayVector = perspectionMatrix * cameraMatrix * matrixCube;
-	displayVector.afterCalculation(400);
 
-	application.AddRenderable(&displayVector);
+
+	//application.AddRenderable(&displayVector);
 	if (!application.GetWindow())
 	{
 		LOG("Couldn't create window...");

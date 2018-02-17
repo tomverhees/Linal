@@ -19,27 +19,52 @@ public:
 	{
 		array.clear();
 	}
-	T& operator()(int x, int y) {
+	T& operator()(int x, int y)  {
 		return array[(this->y* x) + y];
 	}
 	Matrix Matrix::operator*(const Matrix& other)
 	{
-		if (other.ylength() == 4 && this->xlength() == 4)
+		int MatrixColSize = other.ylength(); 
+		int Matrixrowsize = other.xlength(); 
+		int colsize = ylength(); 
+		Matrix temp = (*this);
+		
+		if(colsize != Matrixrowsize)
 		{
-			return this->multiplyMatrices4X4(other);
+			temp = addRow(); 
+			colsize++;
 		}
-		else if (other.ylength() == 3 && this->xlength() == 3)
+		
+		Matrix newmatrix(xlength(), colsize);
+		for(int coll = 0; coll < MatrixColSize; coll++)
 		{
-			return this->multiplyMatrices3X3(other);
+			for(int row = 0; row < xlength(); row++)
+			{
+				float k = 0;
+				for(int i = 0; i < colsize; i++)
+				{
+					k += temp(row, i) * other.getMatrix()[(other.ylength()* i) + coll];
+				}
+				newmatrix(row, coll) = k; 
+			}
 		}
-		else if (other.ylength() == 2 && this->xlength() == 2)
+		return newmatrix; 
+	}
+	Matrix Matrix::addRow()
+	{
+		Matrix newMatrix(xlength(), ylength() + 1);
+		for (int x = 0; x < this->xlength(); x++)
 		{
-			return this->multiplyMatrices2X2(other);
+			for (int y = 0; y < this->ylength(); y++)
+			{
+				newMatrix(x, y) = array[this->ylength() * x + y];
+			}
 		}
-		else
+		for(int i = 0; i < xlength(); i++)
 		{
-			throw std::exception("The matrix was not compatible");
+			newMatrix(i, ylength()) = 1;
 		}
+		return newMatrix; 
 	}
 	Matrix rotateMatrix(float degrees)
 	{
@@ -183,7 +208,7 @@ public:
 		float t1 = atan2(z, x);
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
 		temp = (*this) * translate3d(-x, -y, -z);
-		temp = temp * rotate3dO(degrees, x, y, z);
+		temp = temp.rotate3dO(degrees, x, y, z);
 		product = temp * translate3d(-x, -y, -z);
 		return product;
 	}
@@ -323,7 +348,7 @@ public:
 	{
 		return y;
 	}
-	std::vector<T> getMatrix()
+	std::vector<T> Matrix::getMatrix() const
 	{
 		return array;
 	}
@@ -333,19 +358,22 @@ public:
 	}
 	void Draw() override
 	{
-		for (int i = 0; i < x; i++)
+		Vector eye = Vector(100, 200, 500);
+		Vector lookAt = Vector(250, 250, 0);
+		Vector up = Vector(0, 1, 0);
+		Matrix<float> cameraMatrix = Matrix<float>(4, 4);
+		Matrix<float> perspectionMatrix = Matrix<float>(4, 4);
+		cameraMatrix = cameraMatrix.generateCameraMatrix(eye, lookAt, up);
+		perspectionMatrix = perspectionMatrix.generatePerspectionMatrix(100, 1000, 90);
+		Matrix<float> displayVector = (*this) * cameraMatrix * perspectionMatrix;
+		displayVector.afterCalculation(1200);
+		for(int i = 0; i < xlength(); i++)
 		{
-			if (i < x - 1)
+			if(displayVector(i,3) > 0 && displayVector(((i+1) % xlength()), 3) > 0)
 			{
-				mApplication->SetColor(Color(0, 0, 0, 0));
-				mApplication->DrawLine(this->operator()(i, 0) * 10, this->operator()(i, 1) * 10, this->operator()(i + 1, 0) * 10, this->operator()(i + 1, 1) * 10);
-				mApplication->SetColor(Color(255, 255, 255, 255));
-			}
-			else
-			{
-				mApplication->SetColor(Color(0, 0, 0, 0));
-				mApplication->DrawLine(this->operator()(i, 0) * 10, this->operator()(i, 1) * 10, this->operator()(0, 0) * 10, this->operator()(0, 1) * 10);
-				mApplication->SetColor(Color(255, 255, 255, 255));
+				mApplication->SetColor(Color(0, 0, 0, 0)); 
+				mApplication->DrawLine(displayVector(i,0), displayVector(i,1), displayVector((i + 1) % xlength(),0), displayVector((i + 1) % xlength(),1));
+				mApplication->SetColor(Color(255, 255, 255, 255)); 
 			}
 		}
 	}
@@ -361,7 +389,7 @@ public:
 		Vector x = y.crossProduct(z);
 		x.normalize();
 
-		y = z.crossProduct(y);
+		y = z.crossProduct(x);
 		y.normalize();
 
 		float inProductX = x.inProduct(eye) * -1;
@@ -372,15 +400,12 @@ public:
 		cameraMatrix(0, 0) = x.getDeltaX();
 		cameraMatrix(0, 1) = y.getDeltaX();
 		cameraMatrix(0, 2) = z.getDeltaX();
-		cameraMatrix(0, 3) = 0;
 		cameraMatrix(1, 0) = x.getDeltaY();
 		cameraMatrix(1, 1) = y.getDeltaY();
 		cameraMatrix(1, 2) = z.getDeltaY();
-		cameraMatrix(1, 3) = 0;
 		cameraMatrix(2, 0) = x.getDeltaZ();
 		cameraMatrix(2, 1) = y.getDeltaZ();
 		cameraMatrix(2, 2) = z.getDeltaZ();
-		cameraMatrix(2, 3) = 0;
 		cameraMatrix(3, 0) = inProductX;
 		cameraMatrix(3, 1) = inProductY;
 		cameraMatrix(3, 2) = inProductZ;
@@ -408,10 +433,10 @@ public:
 		perspectionMatrix(2, 0) = 0;
 		perspectionMatrix(2, 1) = 0;
 		perspectionMatrix(2, 2) = matrix2_2;
-		perspectionMatrix(2, 3) = matrix2_3;
+		perspectionMatrix(2,3) = matrix2_3;
 		perspectionMatrix(3, 0) = 0;
 		perspectionMatrix(3, 1) = 0;
-		perspectionMatrix(3, 2) = -1;
+		perspectionMatrix(3,2) = -1;
 		perspectionMatrix(3, 3) = 0;
 
 		return perspectionMatrix;
@@ -421,9 +446,9 @@ public:
 	{
 		for (int i = 0; i < x; i++)
 		{
-			this->operator()(0, i) = (screenSize / 2) + ((this->operator()(0, i) + 1) / this->operator()(3, i)) * screenSize * 0.5;
-			this->operator()(1, i) = (screenSize / 2) + ((this->operator()(1, i) + 1) / this->operator()(3, i)) * screenSize * 0.5;
-			this->operator()(2, i) *= -1;
+			this->operator()(i, 0) = (screenSize / 2) + ((this->operator()(i,0) + 1) / this->operator()(i,3)) * screenSize * 0.5;
+			this->operator()(i,1) = (screenSize / 2) + ((this->operator()(i,1) + 1) / this->operator()(i,3)) * screenSize * 0.5;
+			this->operator()(i,2) *= -1;
 		}
 	}
 

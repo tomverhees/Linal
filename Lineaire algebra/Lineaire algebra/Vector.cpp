@@ -5,10 +5,11 @@
 #include <math.h>
 #include "FWApplication.h"
 
-Vector::Vector(float deltax, float deltay, float deltaz, float x, float y, float z)
+Vector::Vector(float deltax, float deltay, float deltaz, float extra, float x, float y, float z)
 	: x_(x)
 	, y_(y)
 	, z_(z)
+	, extra_(extra)
 	, deltax_(deltax)
 	, deltay_(deltay)
 	, deltaz_(deltaz)
@@ -73,22 +74,22 @@ float Vector::calculateAngle(const Vector& vector) const
 
 Vector Vector::operator+(const Vector& vector)
 {
-	return Vector(deltax_ + vector.getDeltaX(), deltay_ + vector.getDeltaY(), deltaz_ + vector.getDeltaZ(), x_, y_, z_);
+	return Vector(deltax_ + vector.getDeltaX(), deltay_ + vector.getDeltaY(), deltaz_ + vector.getDeltaZ(), extra_ + vector.extra_, x_, y_, z_);
 }
 
 Vector Vector::operator-(const Vector& vector) const
 {
-	return Vector(deltax_ - vector.getDeltaX(), deltay_ - vector.getDeltaY(), deltaz_ - vector.getDeltaZ(), x_, y_, z_);
+	return Vector(deltax_ - vector.getDeltaX(), deltay_ - vector.getDeltaY(), deltaz_ - vector.getDeltaZ(), extra_ - vector.extra_, x_, y_, z_);
 }
 
 Vector Vector::operator*(const Vector& vector) const
 {
-	return Vector(deltax_ * vector.getDeltaX(), deltay_ * vector.getDeltaY(), deltaz_ * vector.getDeltaZ(), x_, y_, z_);
+	return Vector(deltax_ * vector.getDeltaX(), deltay_ * vector.getDeltaY(), deltaz_ * vector.getDeltaZ(), extra_ * vector.extra_, x_, y_, z_);
 }
 
 Vector Vector::operator*(float scale) const
 {
-	return Vector(deltax_ * scale, deltay_ * scale, deltaz_ * scale, x_, y_, z_);
+	return Vector(deltax_ * scale, deltay_ * scale, deltaz_ * scale,extra_*scale, x_, y_, z_);
 }
 
 void Vector::Update(float deltaTime)
