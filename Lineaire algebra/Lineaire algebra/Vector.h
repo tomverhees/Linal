@@ -24,7 +24,7 @@ public:
 	~Vector() = default;
 	float inProduct(const Vector& vector) const;
 	float calculateAngle(const Vector& vector) const;
-	Vector operator+(const Vector& vector);
+	Vector operator+(const Vector& vector) const;
 	Vector operator-(const Vector& vector) const;
 	Vector operator*(const Vector& vector) const;
 	Vector operator*(float scale) const;

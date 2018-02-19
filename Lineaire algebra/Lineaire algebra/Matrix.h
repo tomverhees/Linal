@@ -31,7 +31,7 @@ public:
 		
 		if(colsize != Matrixrowsize)
 		{
-			temp = addRow(); 
+			temp = addColumn(); 
 			colsize++;
 		}
 		
@@ -50,7 +50,7 @@ public:
 		}
 		return newmatrix; 
 	}
-	Matrix Matrix::addRow()
+	Matrix Matrix::addColumn()
 	{
 		Matrix newMatrix(xlength(), ylength() + 1);
 		for (int x = 0; x < this->xlength(); x++)
@@ -129,78 +129,6 @@ public:
 		product = temp * rotateY(t1);
 		return product;
 	}
-	Matrix multiplyMatrices2X2(const Matrix& multiplierMatrix)
-	{
-		Matrix matrix = (*this);
-		Matrix multiplyingMatrixPoints = multiplierMatrix;
-		if (multiplyingMatrixPoints.ylength() != 2 || matrix.xlength() != 2)
-		{
-			throw std::exception("MatrixHelper::multiplyMatrices2X2 >> multiplierMatrix must have exactly 2 points (columns).");
-		}
-		int k = 0;
-		Matrix product = Matrix(multiplierMatrix.xlength(), matrix.ylength());
-		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
-		{
-			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
-			{
-				for (int n = 0; n < matrix.ylength(); n++)
-				{
-					k += multiplyingMatrixPoints(l, n) * matrix.array[(ylength() * n) + i];
-				}
-				product(l, i) = k;
-				k = 0;
-			}
-		}
-		return product;
-	}
-	Matrix multiplyMatrices3X3(const Matrix& multiplierMatrix)
-	{
-		Matrix matrix = (*this);
-		Matrix multiplyingMatrixPoints = multiplierMatrix;
-		if (multiplyingMatrixPoints.ylength() != 3 || matrix.xlength() != 3)
-		{
-			throw std::exception("MatrixHelper::multiplyMatrices3X3 >> multiplierMatrix must have exactly 3 points (columns).");
-		}
-		int k = 0;
-		Matrix product = Matrix(multiplierMatrix.xlength(), matrix.ylength());
-		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
-		{
-			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
-			{
-				for (int n = 0; n < matrix.ylength(); n++)
-				{
-					k += multiplyingMatrixPoints(l, n) * matrix.array[(ylength() * n) + i];
-				}
-				product(l, i) = k;
-				k = 0;
-			}
-		}
-		return product;
-	}
-	Matrix multiplyMatrices4X4(const Matrix& multiplierMatrix)
-	{
-		Matrix matrix = (*this);
-		Matrix multiplyingMatrixPoints = multiplierMatrix;
-		if (multiplyingMatrixPoints.ylength() != 4 || matrix.xlength() != 4)
-		{
-			throw std::exception("MatrixHelper::multiplyMatrices4X4 >> multiplierMatrix must have exactly 4 points (columns).");
-		}
-		int k = 0;
-		Matrix product = Matrix(multiplierMatrix.xlength(), matrix.ylength());
-		for (int i = 0; i < multiplyingMatrixPoints.ylength(); i++)
-		{
-			for (int l = 0; l < multiplyingMatrixPoints.xlength(); l++)
-			{
-				for (int n = 0; n < matrix.ylength(); n++)
-				{
-					k += multiplyingMatrixPoints(l, n) * matrix.array[(ylength() * n) + i];
-				}
-				product(l, i) = k;
-				k = 0;
-			}
-		}
-		return product;
-	}
 	Matrix rotate3dall(float degrees, float x, float y, float z)
 	{
 		Matrix product = Matrix(4, 4);
@@ -269,7 +197,7 @@ public:
 		scale(3, 3) = 1;
 		return scale;
 	}
-	Matrix rotateZ(float radians)
+	static Matrix rotateZ(float radians)
 	{
 		//float radians = degrees * M_PI / 180;
 		Matrix scale = Matrix(4, 4);
@@ -286,7 +214,7 @@ public:
 		scale(3, 3) = 1;
 		return scale;
 	}
-	Matrix InverseRotateZ(float radians)
+	static Matrix InverseRotateZ(float radians)
 	{
 		//float radians = degrees * M_PI / 180;
 		Matrix scale = Matrix(4, 4);
@@ -302,14 +230,14 @@ public:
 		scale(3, 3) = 1;
 		return scale;
 	}
-	Matrix scale2d(float scalex, float scaley)
+	static Matrix scale2d(float scalex, float scaley)
 	{
 		Matrix scale = Matrix(2, 2);
 		scale(0, 0) = scalex;
 		scale(1, 1) = scaley;
 		return scale;
 	}
-	Matrix scale3d(float scalex, float scaley, float scalez)
+	static Matrix scale3d(float scalex, float scaley, float scalez)
 	{
 		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = scalex;
@@ -318,7 +246,7 @@ public:
 		scale(3, 3) = 1;
 		return scale;
 	}
-	Matrix translate2d(float transx, float transy)
+	static Matrix translate2d(float transx, float transy)
 	{
 		Matrix scale = Matrix(3, 3);
 		scale(0, 0) = 1;
@@ -328,7 +256,7 @@ public:
 		scale(2, 1) = transy;
 		return scale;
 	}
-	Matrix translate3d(float transx, float transy, float transz)
+	static Matrix translate3d(float transx, float transy, float transz)
 	{
 		Matrix scale = Matrix(4, 4);
 		scale(0, 0) = 1;

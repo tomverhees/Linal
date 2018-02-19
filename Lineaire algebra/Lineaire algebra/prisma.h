@@ -13,6 +13,8 @@ public:
 	void rotate(float degrees);
 	void move(float movex, float movey);
 
+	Vector& getDirection(int sideIndex, float move);
+
 private: 
 	std::vector<Matrix<float>> sides; 
 

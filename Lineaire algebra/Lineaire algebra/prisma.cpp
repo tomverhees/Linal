@@ -4,7 +4,7 @@
 
 prisma::prisma()
 {
-	createPrisma(); 
+	createPrisma();
 }
 
 
@@ -27,7 +27,7 @@ void prisma::createPrisma()
 	testbottom(3, 0) = 0;
 	testbottom(3, 1) = 0;
 	testbottom(3, 2) = 20;
-	sides.push_back(testbottom); 
+	sides.push_back(testbottom);
 
 	Matrix<float> testright = Matrix<float>(4, 3);
 	testright(0, 0) = 40;
@@ -92,12 +92,11 @@ void prisma::createPrisma()
 
 std::vector<Matrix<float>>& prisma::getSides()
 {
-	return sides; 
+	return sides;
 }
 
 void prisma::Update(float deltaTime)
 {
-	move(1, 1);
 }
 
 void prisma::rotate(float degrees)
@@ -110,8 +109,35 @@ void prisma::rotate(float degrees)
 
 void prisma::move(float movex, float movey)
 {
-	for (auto &element : sides)
+	if (movex != 0)
 	{
-		element = element * element.translate3d(movex, movey,0); 
+		Vector normal = getDirection(4, movex);
+		for (int i = 0; i < sides.size(); i++) {
+			sides[i] = sides[i] * sides[3].translate3d(normal.getDeltaX(), normal.getDeltaY(), normal.getDeltaZ());
+		}
 	}
+
+	if (movey != 0)
+	{
+		Vector normal = getDirection(3, movey);
+		for (int i = 0; i < sides.size(); i++) {
+			sides[i] = sides[i] * sides[4].translate3d(normal.getDeltaX(), normal.getDeltaY(), normal.getDeltaZ());
+		}
+	}
+}
+
+Vector& prisma::getDirection(int sideIndex, float move)
+{
+	Matrix<float> side = sides[sideIndex];
+	Vector v1 = Vector(side(0, 0), side(0, 1), side(0, 2));
+	Vector v2 = Vector(side(1, 0), side(1, 1), side(1, 2));
+	Vector v3 = Vector(side(2, 0), side(2, 1), side(2, 2));
+
+	Vector r1 = v2 - v1;
+	Vector r2 = v3 - v1;
+	Vector normal = r1.crossProduct(r2);
+	normal.normalize();
+	normal.scaleVector(move, move, move);
+
+	return normal;
 }

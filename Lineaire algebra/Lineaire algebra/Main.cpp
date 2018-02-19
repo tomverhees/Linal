@@ -93,7 +93,7 @@ int main()
 	//Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
 	prisma prisma;
 	application.AddRenderable(&prisma);
-	prisma.rotate(50);
+	//prisma.rotate(50);
 	for (int i = 0; i < prisma.getSides().size(); i++)
 	{
 		application.AddRenderable(&prisma.getSides()[i]);
@@ -101,14 +101,14 @@ int main()
 	}
 
 	Piramide piramide;
-	
+
 	for (int i = 0; i < piramide.getSides().size(); i++)
 	{
 		application.AddRenderable(&piramide.getSides()[i]);
 	}
 	application.AddRenderable(&piramide);
 
-	
+
 
 	//application.AddRenderable(&matrix2);
 	//application.AddRenderable(&matrix3);
@@ -146,7 +146,18 @@ int main()
 				break;
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
-
+				case SDLK_UP:
+					prisma.move(0, -1);
+					break;
+				case SDLK_DOWN:
+					prisma.move(0, 1);
+					break;
+				case SDLK_RIGHT:
+					prisma.move(-1, 0);
+					break;
+				case SDLK_LEFT:
+					prisma.move(1, 0);
+					break;
 				default:
 					break;
 				}

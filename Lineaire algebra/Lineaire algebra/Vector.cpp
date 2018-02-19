@@ -72,7 +72,7 @@ float Vector::calculateAngle(const Vector& vector) const
 	return cos * 180.0 / M_PI;
 }
 
-Vector Vector::operator+(const Vector& vector)
+Vector Vector::operator+(const Vector& vector) const
 {
 	return Vector(deltax_ + vector.getDeltaX(), deltay_ + vector.getDeltaY(), deltaz_ + vector.getDeltaZ(), extra_ + vector.extra_, x_, y_, z_);
 }
