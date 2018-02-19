@@ -101,9 +101,12 @@ void prisma::Update(float deltaTime)
 
 void prisma::rotate(float degrees)
 {
+	float centerx = sides[0].getCenter(0);
+	float centery = sides[1].getCenter(1);
+	float centerz = sides[0].getCenter(2);
 	for (auto &element : sides)
 	{
-		element = element.rotate3dall(degrees, 20, 10, 10);
+		element = element.rotate3dall(degrees, centerx, centery, centerz);
 	}
 }
 

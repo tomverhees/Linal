@@ -158,6 +158,37 @@ int main()
 				case SDLK_LEFT:
 					prisma.move(1, 0);
 					break;
+				case SDLK_KP_8:
+					prisma.rotate(90);
+					break;
+				case SDLK_KP_2:
+					prisma.rotate(-1);
+					break;
+				case SDLK_KP_6:
+					break;
+				case SDLK_KP_4:
+					break;
+				case SDLK_w:
+					//camera.translate(0, 1, 0);
+					break;
+				case SDLK_s:
+					//camera.translate(0, -1, 0);
+					break;
+				case SDLK_d:
+					//camera.translate(1, 0, 0);
+					break;
+					// Camera LEFT
+				case SDLK_a:
+					//camera.translate(-1, 0, 0);
+					break;
+					// Camera ZOOM IN
+				case SDLK_PAGEUP:
+					//camera.translate(0, 0, 1);
+					break;
+					// Camera ZOOM OUT
+				case SDLK_PAGEDOWN:
+					//camera.translate(0, 0, -1);
+					break;
 				default:
 					break;
 				}

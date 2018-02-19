@@ -19,36 +19,36 @@ public:
 	{
 		array.clear();
 	}
-	T& operator()(int x, int y)  {
+	T& operator()(int x, int y) {
 		return array[(this->y* x) + y];
 	}
 	Matrix Matrix::operator*(const Matrix& other)
 	{
-		int MatrixColSize = other.ylength(); 
-		int Matrixrowsize = other.xlength(); 
-		int colsize = ylength(); 
+		int MatrixColSize = other.ylength();
+		int Matrixrowsize = other.xlength();
+		int colsize = ylength();
 		Matrix temp = (*this);
-		
-		if(colsize != Matrixrowsize)
+
+		if (colsize != Matrixrowsize)
 		{
-			temp = addColumn(); 
+			temp = addColumn();
 			colsize++;
 		}
-		
+
 		Matrix newmatrix(xlength(), colsize);
-		for(int coll = 0; coll < MatrixColSize; coll++)
+		for (int coll = 0; coll < MatrixColSize; coll++)
 		{
-			for(int row = 0; row < xlength(); row++)
+			for (int row = 0; row < xlength(); row++)
 			{
 				float k = 0;
-				for(int i = 0; i < colsize; i++)
+				for (int i = 0; i < colsize; i++)
 				{
 					k += temp(row, i) * other.getMatrix()[(other.ylength()* i) + coll];
 				}
-				newmatrix(row, coll) = k; 
+				newmatrix(row, coll) = k;
 			}
 		}
-		return newmatrix; 
+		return newmatrix;
 	}
 	Matrix Matrix::addColumn()
 	{
@@ -60,11 +60,21 @@ public:
 				newMatrix(x, y) = array[this->ylength() * x + y];
 			}
 		}
-		for(int i = 0; i < xlength(); i++)
+		for (int i = 0; i < xlength(); i++)
 		{
 			newMatrix(i, ylength()) = 1;
 		}
-		return newMatrix; 
+		return newMatrix;
+	}
+	float Matrix::getCenter(int side)
+	{
+		float total = 0;
+		for (int i = 0; i < x; i++)
+		{
+			total += this->operator()(i, side);
+		}
+		total /= static_cast<float>(x);
+		return total;
 	}
 	Matrix rotateMatrix(float degrees)
 	{
@@ -295,13 +305,13 @@ public:
 		perspectionMatrix = perspectionMatrix.generatePerspectionMatrix(100, 1000, 90);
 		Matrix<float> displayVector = (*this) * cameraMatrix * perspectionMatrix;
 		displayVector.afterCalculation(1200);
-		for(int i = 0; i < xlength(); i++)
+		for (int i = 0; i < xlength(); i++)
 		{
-			if(displayVector(i,3) > 0 && displayVector(((i+1) % xlength()), 3) > 0)
+			if (displayVector(i, 3) > 0 && displayVector(((i + 1) % xlength()), 3) > 0)
 			{
-				mApplication->SetColor(Color(0, 0, 0, 0)); 
-				mApplication->DrawLine(displayVector(i,0), displayVector(i,1), displayVector((i + 1) % xlength(),0), displayVector((i + 1) % xlength(),1));
-				mApplication->SetColor(Color(255, 255, 255, 255)); 
+				mApplication->SetColor(Color(0, 0, 0, 0));
+				mApplication->DrawLine(displayVector(i, 0), displayVector(i, 1), displayVector((i + 1) % xlength(), 0), displayVector((i + 1) % xlength(), 1));
+				mApplication->SetColor(Color(255, 255, 255, 255));
 			}
 		}
 	}
@@ -361,10 +371,10 @@ public:
 		perspectionMatrix(2, 0) = 0;
 		perspectionMatrix(2, 1) = 0;
 		perspectionMatrix(2, 2) = matrix2_2;
-		perspectionMatrix(2,3) = matrix2_3;
+		perspectionMatrix(2, 3) = matrix2_3;
 		perspectionMatrix(3, 0) = 0;
 		perspectionMatrix(3, 1) = 0;
-		perspectionMatrix(3,2) = -1;
+		perspectionMatrix(3, 2) = -1;
 		perspectionMatrix(3, 3) = 0;
 
 		return perspectionMatrix;
@@ -374,9 +384,9 @@ public:
 	{
 		for (int i = 0; i < x; i++)
 		{
-			this->operator()(i, 0) = (screenSize / 2) + ((this->operator()(i,0) + 1) / this->operator()(i,3)) * screenSize * 0.5;
-			this->operator()(i,1) = (screenSize / 2) + ((this->operator()(i,1) + 1) / this->operator()(i,3)) * screenSize * 0.5;
-			this->operator()(i,2) *= -1;
+			this->operator()(i, 0) = (screenSize / 2) + ((this->operator()(i, 0) + 1) / this->operator()(i, 3)) * screenSize * 0.5;
+			this->operator()(i, 1) = (screenSize / 2) + ((this->operator()(i, 1) + 1) / this->operator()(i, 3)) * screenSize * 0.5;
+			this->operator()(i, 2) *= -1;
 		}
 	}
 
