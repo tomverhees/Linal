@@ -159,7 +159,7 @@ int main()
 					prisma.move(1, 0);
 					break;
 				case SDLK_KP_8:
-					prisma.rotate(90);
+					prisma.rotate(1);
 					break;
 				case SDLK_KP_2:
 					prisma.rotate(-1);

@@ -147,7 +147,7 @@ public:
 		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
 		temp = (*this) * translate3d(-x, -y, -z);
 		temp = temp.rotate3dO(degrees, x, y, z);
-		product = temp * translate3d(-x, -y, -z);
+		product = temp * translate3d(x, y, z);
 		return product;
 	}
 	Matrix rotateX(float degrees)
