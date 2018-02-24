@@ -104,13 +104,7 @@ void prisma::rotate(float degrees)
 	float centerx = sides[2](1,0) + (sides[2](2,0)- sides[2](1,0)) / 2; //sides[0].getCenter(0);
 	float centery = sides[2](1, 1) + (sides[2](2, 1) - sides[2](1, 1)) / 2; //sides[1].getCenter(1);
 	float centerz = sides[2](1, 2) + (sides[2](2, 2) - sides[2](1, 2)) / 2; //sides[0].getCenter(2);
-	Vector front1 = Vector(sides[2](0, 0), sides[2](0, 1), sides[2](0, 2)); 
-	Vector front2 = Vector(sides[2](1, 0), sides[2](1, 1), sides[2](1, 2));
-	Vector front3 = Vector(sides[2](2, 0), sides[2](2, 1), sides[2](2, 2));
-	Vector direction = front1 - front2; 
-	Vector direction2 = front2 - front3; 
-	Vector normal = direction.crossProduct(direction2); 
-	normal.normalize(); 
+	Vector normal = getDirection(2, 1);
 	for (auto &element : sides)
 	{
 		element = element.rotate3dall(degrees, centerx, centery, centerz, normal);
@@ -135,13 +129,7 @@ void prisma::rotateRoll(float degrees)
 	float centerx = sides[4](1, 0) + (sides[4](2, 0) - sides[4](1, 0)) / 2; //sides[0].getCenter(0);
 	float centery = sides[4](1, 1) + (sides[4](2, 1) - sides[4](1, 1)) / 2; //sides[1].getCenter(1);
 	float centerz = sides[4](1, 2) + (sides[4](2, 2) - sides[4](1, 2)) / 2; //sides[0].getCenter(2);
-	Vector front1 = Vector(sides[4](0, 0), sides[4](0, 1), sides[4](0, 2));
-	Vector front2 = Vector(sides[4](1, 0), sides[4](1, 1), sides[4](1, 2));
-	Vector front3 = Vector(sides[4](2, 0), sides[4](2, 1), sides[4](2, 2));
-	Vector direction = front1 - front2;
-	Vector direction2 = front2 - front3;
-	Vector normal = direction.crossProduct(direction2);
-	normal.normalize();
+	Vector normal = getDirection(4, 1);
 	for (auto &element : sides)
 	{
 		element = element.rotate3dall(degrees, centerx, centery, centerz, normal);

@@ -17,7 +17,7 @@ public:
 	void move(float movex, float movey);
 	Bullet shoot();
 
-	Vector& getDirection(int sideIndex, float move);
+	Vector& getDirection(int sideIndex, float move = 1);
 
 private: 
 	std::vector<Matrix<float>> sides; 
