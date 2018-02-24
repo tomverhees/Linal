@@ -126,12 +126,12 @@ public:
 		return product;
 	}
 
-	Matrix rotate3dO(float degrees, float x, float y, float z)
+	Matrix rotate3dO(float degrees, float x, float y, float z, Vector v)
 	{
 		Matrix product = Matrix(4, 4);
 		Matrix temp = Matrix(4, 4);
-		float t1 = atan2(z, x);
-		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
+		float t1 = atan2(v.getDeltaZ(), v.getDeltaX());
+		auto t2 = atan2(v.getDeltaY(), sqrt((v.getDeltaX()*v.getDeltaX()) + (v.getDeltaZ()*v.getDeltaZ())));
 		temp = (*this) * InverseRotateY(t1);
 		temp = temp * InverseRotateZ(t2);
 		temp = temp * rotateX(degrees);
@@ -139,14 +139,12 @@ public:
 		product = temp * rotateY(t1);
 		return product;
 	}
-	Matrix rotate3dall(float degrees, float x, float y, float z)
+	Matrix rotate3dall(float degrees, float x, float y, float z, Vector v)
 	{
 		Matrix product = Matrix(4, 4);
 		Matrix temp = Matrix(4, 4);
-		float t1 = atan2(z, x);
-		auto t2 = atan2(y, sqrt((x*x) + (z*z)));
 		temp = (*this) * translate3d(-x, -y, -z);
-		temp = temp.rotate3dO(degrees, x, y, z);
+		temp = temp.rotate3dO(degrees, x, y, z, v);
 		product = temp * translate3d(x, y, z);
 		return product;
 	}
@@ -296,7 +294,7 @@ public:
 	}
 	void Draw() override
 	{
-		Vector eye = Vector(100, 200, 500);
+		Vector eye = Vector(0, 0, 500);
 		Vector lookAt = Vector(250, 250, 0);
 		Vector up = Vector(0, 1, 0);
 		Matrix<float> cameraMatrix = Matrix<float>(4, 4);

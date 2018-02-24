@@ -16,79 +16,6 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	FWApplication application;
 
-	/*Vector v1 = Vector(2, 4, 0);
-	Vector v2 = Vector(2, -3, 0, 4, 5);
-	Vector v3 = v1 *= v2;
-	application.AddRenderable(&v1);
-	application.AddRenderable(&v2);
-	application.AddRenderable(&v3);*/
-
-	Matrix<float> testright = Matrix<float>(4, 3);
-	testright(0, 0) = 15;
-	testright(0, 1) = 0;
-	testright(0, 2) = 5;
-	testright(1, 0) = -15;
-	testright(1, 1) = -10;
-	testright(1, 2) = 5;
-	testright(2, 0) = -15;
-	testright(2, 1) = -10;
-	testright(2, 2) = -5;
-	testright(3, 0) = 15;
-	testright(3, 1) = 0;
-	testright(3, 2) = -5;
-
-
-	Matrix<float> testtop = Matrix<float>(3, 3);
-	testtop(0, 0) = 15;
-	testtop(0, 1) = 0;
-	testtop(0, 2) = 5;
-	testtop(1, 0) = -15;
-	testtop(1, 1) = 10;
-	testtop(1, 2) = 5;
-	testtop(2, 0) = -15;
-	testtop(2, 1) = -10;
-	testtop(2, 2) = 5;
-
-	Matrix<float> testbot = Matrix<float>(3, 3);
-	testbot(0, 0) = 15;
-	testbot(0, 1) = 0;
-	testbot(0, 2) = -5;
-	testbot(1, 0) = -15;
-	testbot(1, 1) = 10;
-	testbot(1, 2) = -5;
-	testbot(2, 0) = -15;
-	testbot(2, 1) = -10;
-	testbot(2, 2) = 5;
-
-	Matrix<float> testleft = Matrix<float>(4, 3);
-	testleft(0, 0) = 15;
-	testleft(0, 1) = 0;
-	testleft(0, 2) = 5;
-	testleft(1, 0) = -15;
-	testleft(1, 1) = 10;
-	testleft(1, 2) = 5;
-	testleft(2, 0) = -15;
-	testleft(2, 1) = 10;
-	testleft(2, 2) = -5;
-	testleft(3, 0) = 15;
-	testleft(3, 1) = 0;
-	testleft(3, 2) = -5;
-
-	Matrix<float> testback = Matrix<float>(4, 3);
-	testback(0, 0) = -15;
-	testback(0, 1) = 10;
-	testback(0, 2) = 5;
-	testback(1, 0) = -15;
-	testback(1, 1) = -10;
-	testback(1, 2) = 5;
-	testback(2, 0) = -15;
-	testback(2, 1) = -10;
-	testback(2, 2) = -5;
-	testback(3, 0) = -15;
-	testback(3, 1) = 10;
-	testback(3, 2) = -5;
-
-
 	//Matrix<float> matrix3 = matrix5.scale2d(5, 5) * matrix5;
 	//Matrix<float> matrix4 = matrix3.rotate(90, 5,5);
 	prisma prisma;
@@ -108,8 +35,8 @@ int main()
 	}
 	application.AddRenderable(&piramide);
 
-
-
+	std::vector<Bullet> bullets; 
+	
 	//application.AddRenderable(&matrix2);
 	//application.AddRenderable(&matrix3);
 	//application.AddRenderable(&matrix4);
@@ -159,22 +86,27 @@ int main()
 					prisma.move(1, 0);
 					break;
 				case SDLK_KP_8:
-					prisma.rotate(1);
+					prisma.rotate(10);
 					break;
 				case SDLK_KP_2:
-					prisma.rotate(-1);
+					prisma.rotate(-10);
 					break;
 				case SDLK_KP_6:
+					prisma.rotateVertical(10);
 					break;
 				case SDLK_KP_4:
+					prisma.rotateVertical(-10);
 					break;
 				case SDLK_w:
 					//camera.translate(0, 1, 0);
+					prisma.rotateRoll(10); 
 					break;
 				case SDLK_s:
+					prisma.rotateRoll(-10);
 					//camera.translate(0, -1, 0);
 					break;
-				case SDLK_d:
+				case SDLK_SPACE:
+					bullets.push_back(prisma.shoot());
 					//camera.translate(1, 0, 0);
 					break;
 					// Camera LEFT
@@ -200,6 +132,11 @@ int main()
 		// For the background
 		application.SetColor(Color(255, 255, 255, 255));
 
+		for (auto &element : bullets)
+		{
+			element.Update(0);
+			element.Draw(); 
+		}
 		application.UpdateGameObjects();
 		application.RenderGameObjects();
 		application.EndTick();
@@ -225,15 +162,7 @@ int main()
 		m(i, 1) = 3;
 	}*/
 
-	m(0, 0) = 2;
-	m(0, 1) = 2;
-	m(1, 0) = 2;
-	m(1, 1) = 2;
-	m(2, 0) = 2;
-	m(2, 1) = 2;
-	Matrix<float> n = Matrix<float>(3, 3);
-	auto k = n.translate2d(0.1, 0.1);
-	auto l = m.rotate3dall(10, 5, 2, 3);
+	
 	//auto f = m * k;
 
 	return EXIT_SUCCESS;

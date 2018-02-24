@@ -1,5 +1,5 @@
 #include "prisma.h"
-
+#include "Bullet.h"
 
 
 prisma::prisma()
@@ -101,12 +101,50 @@ void prisma::Update(float deltaTime)
 
 void prisma::rotate(float degrees)
 {
-	float centerx = sides[0].getCenter(0);
-	float centery = sides[1].getCenter(1);
-	float centerz = sides[0].getCenter(2);
+	float centerx = sides[2](1,0) + (sides[2](2,0)- sides[2](1,0)) / 2; //sides[0].getCenter(0);
+	float centery = sides[2](1, 1) + (sides[2](2, 1) - sides[2](1, 1)) / 2; //sides[1].getCenter(1);
+	float centerz = sides[2](1, 2) + (sides[2](2, 2) - sides[2](1, 2)) / 2; //sides[0].getCenter(2);
+	Vector front1 = Vector(sides[2](0, 0), sides[2](0, 1), sides[2](0, 2)); 
+	Vector front2 = Vector(sides[2](1, 0), sides[2](1, 1), sides[2](1, 2));
+	Vector front3 = Vector(sides[2](2, 0), sides[2](2, 1), sides[2](2, 2));
+	Vector direction = front1 - front2; 
+	Vector direction2 = front2 - front3; 
+	Vector normal = direction.crossProduct(direction2); 
+	normal.normalize(); 
 	for (auto &element : sides)
 	{
-		element = element.rotate3dall(degrees, centerx, centery, centerz);
+		element = element.rotate3dall(degrees, centerx, centery, centerz, normal);
+	}
+}
+
+void prisma::rotateVertical(float degrees)
+{
+	float centerx = sides[2](1, 0) + (sides[2](2, 0) - sides[2](1, 0)) / 2; //sides[0].getCenter(0);
+	float centery = sides[2](1, 1) + (sides[2](2, 1) - sides[2](1, 1)) / 2; //sides[1].getCenter(1);
+	float centerz = sides[2](1, 2) + (sides[2](2, 2) - sides[2](1, 2)) / 2; //sides[0].getCenter(2);
+	Vector normal = Vector(sides[2](2, 0) - sides[2](1,0), sides[2](2, 1)- sides[2](1,1), sides[2](2, 2)- sides[2](1,2));
+	normal.normalize();
+	for (auto &element : sides)
+	{
+		element = element.rotate3dall(degrees, centerx, centery, centerz, normal);
+	}
+}
+
+void prisma::rotateRoll(float degrees)
+{
+	float centerx = sides[4](1, 0) + (sides[4](2, 0) - sides[4](1, 0)) / 2; //sides[0].getCenter(0);
+	float centery = sides[4](1, 1) + (sides[4](2, 1) - sides[4](1, 1)) / 2; //sides[1].getCenter(1);
+	float centerz = sides[4](1, 2) + (sides[4](2, 2) - sides[4](1, 2)) / 2; //sides[0].getCenter(2);
+	Vector front1 = Vector(sides[4](0, 0), sides[4](0, 1), sides[4](0, 2));
+	Vector front2 = Vector(sides[4](1, 0), sides[4](1, 1), sides[4](1, 2));
+	Vector front3 = Vector(sides[4](2, 0), sides[4](2, 1), sides[4](2, 2));
+	Vector direction = front1 - front2;
+	Vector direction2 = front2 - front3;
+	Vector normal = direction.crossProduct(direction2);
+	normal.normalize();
+	for (auto &element : sides)
+	{
+		element = element.rotate3dall(degrees, centerx, centery, centerz, normal);
 	}
 }
 
@@ -127,6 +165,20 @@ void prisma::move(float movex, float movey)
 			sides[i] = sides[i] * sides[4].translate3d(normal.getDeltaX(), normal.getDeltaY(), normal.getDeltaZ());
 		}
 	}
+}
+
+Bullet prisma::shoot()
+{
+	Vector normal = getDirection(3, 1); 
+	Matrix<float> bullet1 = Matrix<float>(2,3); 
+	bullet1(0, 0) = sides[3](0,0);
+	bullet1(0, 1) = sides[3](0, 1); 
+	bullet1(0, 2) = sides[3](0, 2); 
+	bullet1(1, 0) = sides[3](0, 0) + normal.getDeltaX(); 
+	bullet1(1, 1) = sides[3](0, 1) + normal.getDeltaY(); 
+	bullet1(1, 2) = sides[3](0, 2) + normal.getDeltaZ();
+	Bullet bullet(bullet1); 
+	return bullet; 
 }
 
 Vector& prisma::getDirection(int sideIndex, float move)
