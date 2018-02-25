@@ -3,11 +3,11 @@
 #include "Matrix.h"
 #include "Bullet.h"
 
-class prisma : public IGameObject
+class Prisma : public IGameObject
 {
 public:
-	prisma();
-	~prisma();
+	Prisma();
+	~Prisma();
 	void createPrisma();
 	void Update(float deltaTime) override;
 	std::vector<Matrix<float>>& getSides();
